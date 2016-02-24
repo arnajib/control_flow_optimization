@@ -1,0 +1,14 @@
+//
+// Created by najib on 24/02/16.
+//
+
+#ifndef CONTROL_FLOW_OPTIMIZATION_SOLUTION_H
+#define CONTROL_FLOW_OPTIMIZATION_SOLUTION_H
+
+
+class Solution {
+
+};
+
+
+#endif //CONTROL_FLOW_OPTIMIZATION_SOLUTION_H
