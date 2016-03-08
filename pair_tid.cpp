@@ -15,7 +15,7 @@ PairTid::~PairTid(){
 
 }
 
-int PairTid::getNumber_transition_() const {
+int PairTid::getNumber_transition_()  {
     return number_transition_;
 }
 
@@ -23,6 +23,6 @@ void PairTid::setNumber_transition_(int number_transition) {
     number_transition_ = number_transition;
 }
 
-void PairTid::setEntry(const std::pair<Tid, Tid> &entry) {
+void PairTid::setEntry(std::pair<Tid, Tid> &entry) {
     entry_ = entry;
 }

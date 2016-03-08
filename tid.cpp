@@ -27,3 +27,7 @@ int Tid::getPosition() const {
 void Tid::setPosition(int position) {
     position_ = position;
 }
+
+bool Tid::operator==(const Tid &tid) {
+    return this->getId_() == tid.getId_();
+}

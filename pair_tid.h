@@ -17,13 +17,15 @@ public :
 
     ~PairTid();
 
-    int getNumber_transition_() const;
+    int getNumber_transition_();
 
     void setNumber_transition_(int number_transition);
 
-    std::pair<Tid, Tid> getEntry() const;
+    std::pair<Tid, Tid> getEntry(){
+        return entry_;
+    };
 
-    void setEntry(const std::pair<Tid, Tid> &entry_);
+    void setEntry( std::pair<Tid, Tid> &entry_);
 
 private:
     int number_transition_;

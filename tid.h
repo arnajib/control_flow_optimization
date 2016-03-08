@@ -22,6 +22,7 @@ public:
     int getPosition() const ;
 
     void setPosition(int position) ;
+    bool operator==(const Tid& tid);
 private:
     int id_;
     int position_;
