@@ -63,14 +63,31 @@ int main() {
 
     vector<PairTid> data;
     Solution solution;
-    ReadFile("data/trace_10_micro_sec_cpu0.txt", data);
+    ReadFile("data/trace_1000_sec_cpu0.txt", data);
     Vorace(data, solution);
+    int distance_max =0;
     //   Afficher les distances
-    for (auto item : data) {
-        std::cout << "distance entre :" << item.getEntry().first.getId_() << " et " <<
-        item.getEntry().second.getId_() << ":" << solution.getDistance(item.getEntry().first, item.getEntry().second) <<
-        std::endl;
+    for (int i = 0; i < solution.tids.size() - 1; ++i) {
+        for (int j = i + 1; j< solution.tids.size(); ++j) {
+            int distance = 0;
+            if (isAPair(solution.tids[i], solution.tids[j], data)) {
+                distance = solution.getDistance(solution.tids[i], solution.tids[j]);
+                if(distance_max < distance)
+                    distance_max = distance;
+                std::cout << "distance entre :" << solution.tids[i].getId_() << " et " <<
+                solution.tids[j].getId_() << ":" << solution.getDistance(solution.tids[i], solution.tids[j]) <<
+                std::endl;
+            }
+        }
+
     }
+    std::cout <<"__________________________ "<<std::endl;
+    std::cout <<"Distance max : "<<distance_max<<std::endl;
+//    for (auto item : data) {
+//        std::cout << "distance entre :" << item.getEntry().first.getId_() << " et " <<
+//        item.getEntry().second.getId_() << ":" << solution.getDistance(item.getEntry().first, item.getEntry().second) <<
+//        std::endl;
+//    }
     return 0;
 }
 
