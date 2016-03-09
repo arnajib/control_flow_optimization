@@ -97,6 +97,24 @@ void swapTid(Solution solution, int &i_1, int &i_2) {
 
 }
 
+/**
+ *  Ecriture des resultats dans un fichier .csv
+ */
+
+void WriteSolution(Solution solution, string file_name, vector<PairTid> data) {
+    int i_1, i_2;
+    std::ofstream myfile;
+    std::string file_path_out = "result/" + file_name + "_solution.txt";
+    myfile.open(file_path_out, std::fstream::app);
+    myfile << "Distance max : " << getDistanceMax(solution, data, i_1, i_2) << std::endl;
+    for (auto item : solution.tids) {
+        myfile << item.getId_() << "\n";
+    }
+
+    myfile.close();
+}
+
+
 int main() {
 /**
  *  lecture des informations a partir d un fichier texte
@@ -105,8 +123,8 @@ int main() {
     int i_1 = 0, i_2 = 0;
     vector<PairTid> data;
     Solution solution;
-    std::string file_in = "data/trace_1000_sec_cpu0.txt";
-    ReadFile(file_in, data);
+    std::string file_in = "trace_1000_sec_cpu0";
+    ReadFile("data/"+file_in + ".txt", data);
     Vorace(data, solution);
 
     Solution solution_temp = solution;
@@ -119,7 +137,7 @@ int main() {
     double duration;
     start = std::clock();
 
-    while (duration < 100.0) {
+    while (duration < 1.0) {
         swapTid(solution_temp, i_1, i_2);
         if (distance_max > getDistanceMax(solution_temp, data, i_1, i_2)) {
             solution = solution_temp;
@@ -139,6 +157,7 @@ int main() {
 //        item.getEntry().second.getId_() << ":" << solution.getDistance(item.getEntry().first, item.getEntry().second) <<
 //        std::endl;
 //    }
+    WriteSolution(solution, file_in,data);
     return 0;
 }
 
