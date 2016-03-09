@@ -1,6 +1,8 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <random>
+#include <ctime>
 #include "pair_tid.h"
 #include "solution.h"
 
@@ -56,33 +58,82 @@ bool Vorace(vector<PairTid> &data, Solution &solution) {
     solution.setPosition();
 }
 
-int main() {
-/**
- *  lecture des informations a partir d un fichier texte
- */
-
-    vector<PairTid> data;
-    Solution solution;
-    ReadFile("data/trace_1000_sec_cpu0.txt", data);
-    Vorace(data, solution);
-    int distance_max =0;
+int getDistanceMax(Solution solution, vector<PairTid> data, int &i_1, int &i_2) {
     //   Afficher les distances
+    int distance_max = 0;
     for (int i = 0; i < solution.tids.size() - 1; ++i) {
-        for (int j = i + 1; j< solution.tids.size(); ++j) {
+        for (int j = i + 1; j < solution.tids.size(); ++j) {
             int distance = 0;
             if (isAPair(solution.tids[i], solution.tids[j], data)) {
                 distance = solution.getDistance(solution.tids[i], solution.tids[j]);
-                if(distance_max < distance)
+                if (distance_max < distance) {
                     distance_max = distance;
-                std::cout << "distance entre :" << solution.tids[i].getId_() << " et " <<
-                solution.tids[j].getId_() << ":" << solution.getDistance(solution.tids[i], solution.tids[j]) <<
-                std::endl;
+                    i_1 = i;
+                    i_2 = j;
+                }
+//                std::cout << "distance entre :" << solution.tids[i].getId_() << " et " <<
+//                solution.tids[j].getId_() << ":" << solution.getDistance(solution.tids[i], solution.tids[j]) <<
+//                std::endl;
             }
         }
 
     }
-    std::cout <<"__________________________ "<<std::endl;
-    std::cout <<"Distance max : "<<distance_max<<std::endl;
+    return distance_max;
+}
+
+void swapTid(Solution solution, int &i_1, int &i_2) {
+    std::default_random_engine generator;
+    std::uniform_int_distribution<int> distribution(0.0, solution.tids.size() - 1);
+    int i = distribution(generator);
+    int j = distribution(generator);
+    Tid temp;
+    temp = solution.tids[i];
+    solution.tids[i] = solution.tids[i_1];
+    solution.tids[i_1] = temp;
+    temp = solution.tids[j];
+    solution.tids[j] = solution.tids[i_2];
+    solution.tids[i_2] = temp;
+    solution.setPosition();
+
+}
+
+int main() {
+/**
+ *  lecture des informations a partir d un fichier texte
+ */
+    int distance_max = 0;
+    int i_1 = 0, i_2 = 0;
+    vector<PairTid> data;
+    Solution solution;
+    std::string file_in = "data/trace_1000_sec_cpu0.txt";
+    ReadFile(file_in, data);
+    Vorace(data, solution);
+
+    Solution solution_temp = solution;
+    distance_max = getDistanceMax(solution, data, i_1, i_2);
+
+    std::cout << "__________________________ " << std::endl;
+    std::cout << "Distance max : " << getDistanceMax(solution, data, i_1, i_2) << std::endl;
+
+    std::clock_t start;
+    double duration;
+    start = std::clock();
+
+    while (duration < 100.0) {
+        swapTid(solution_temp, i_1, i_2);
+        if (distance_max > getDistanceMax(solution_temp, data, i_1, i_2)) {
+            solution = solution_temp;
+            distance_max = getDistanceMax(solution, data, i_1, i_2);
+            std::cout << "__________________________ " << std::endl;
+            std::cout << "Distance max : " << getDistanceMax(solution, data, i_1, i_2) << std::endl;
+        }
+        duration = (std::clock() - start) / (double) CLOCKS_PER_SEC;
+
+    }
+    //   Afficher les distances
+
+    std::cout << "__________________________ " << std::endl;
+    std::cout << "Distance max : " << getDistanceMax(solution, data, i_1, i_2) << std::endl;
 //    for (auto item : data) {
 //        std::cout << "distance entre :" << item.getEntry().first.getId_() << " et " <<
 //        item.getEntry().second.getId_() << ":" << solution.getDistance(item.getEntry().first, item.getEntry().second) <<
